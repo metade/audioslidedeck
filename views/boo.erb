@@ -1,0 +1,48 @@
+<div data-role="page"> 
+  <div data-role="header">
+    <h1>Embed an AudioBoo</h1>
+  </div>
+
+  <div data-role="content">
+    <h2><%= @boo.title %></h2>
+    <img src="<%= @image_url %>" width="100" />
+  
+    <div>
+      <a href="#image-picker" data-role="button" data-rel="dialog">Choose an image</a>
+    </div>
+  
+    <h3>Embed Code</h3>
+    <code>
+      &lt;iframe marginheight=&quot;0&quot; scrolling=&quot;no&quot; marginwidth=&quot;0&quot; src=&quot;<%= @embed_url %>&quot; height=&quot;222&quot; width=&quot;300&quot;&gt;&lt;/iframe&gt;
+    </code>
+  </div>
+
+  <script type="text/javascript">
+  $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=52921130@N00&jsoncallback=?",
+    { format: "json" },
+    function(data) {
+      var html = '';
+      $.each(data.items, function(i,item) {
+        array = item.link.split(/\//g);
+        item_id = array.slice(-2)[0];
+        html += '<li>';
+        html += '<img src="'+item.media.m+'"/>';
+        html += '<h3><a href="/boos/<%= @boo.id %>?photo='+item_id+'">'+item.title+'</a></h3>';
+        html += '<p>'+item.published+'</p>';
+        html += '</li>';
+      });
+      $("#image-list").append(html);
+    });
+  </script>
+</div>
+
+<div data-role="page" id="image-picker" >
+  <div data-role="header">
+    <h1>Pick an image</h1>
+  </div>
+  <div data-role="content">
+    <ul data-role="listview" id="image-list">
+    </ul>
+    <a href="/boos/<%= @boo.id %>" data-role="button" data-rel="back" data-theme="a">Cancel</a>
+  </div>
+</div>

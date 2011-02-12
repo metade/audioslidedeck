@@ -1,0 +1,13 @@
+<div data-role="page"> 
+  <div data-role="header">
+    <h1><%= @user.username %>'s AudioBoos</h1>
+  </div>
+  
+  <div data-role="content">
+    <ul data-role="listview" data-inset="true">
+    <% @boos.each do |boo| %>
+      <li><a href="/boos/<%= boo.id %>"><%= boo.title %></a></li>
+    <% end %>
+    </ul>
+  </div>
+</div>
