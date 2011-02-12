@@ -1,10 +1,10 @@
 <div id="slider">
-  <% @images.each do |image| %>
-    <img src="<%= image %>" />
+  <% @photos.each do |photo| %>
+    <img src="<%= photo %>" />
   <% end %>  
 </div>
 <script type="text/javascript">
-  var ticks = [<%= params['ticks'] %>];
+  var ticks = [<%= @ticks %>];
 </script>
 <p><%= @boo.urls['high_mp3'] %></p>
 <h1><%= @boo.title %><h1>

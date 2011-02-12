@@ -1,4 +1,4 @@
-<div data-role="page"> 
+<div id="main" data-role="page"> 
   <div data-role="header">
     <h1>Embed an AudioBoo</h1>
     <a href="/settings" data-icon="gear" class="ui-btn-right">Settings</a>
@@ -6,11 +6,25 @@
 
   <div data-role="content">
     <h2><%= @boo.title %></h2>
-    <img src="<%= @image_url %>" width="100" />
+    
+    <audio id="player" preload="auto" controls="true">
+      <source src="<%= @boo.urls['high_mp3'] %>" />
+    </audio>
+    
+    <ul data-role="listview" id="photos">
+      <% @photos.each_with_index do |photo,i| %>
+      <li>
+        <img src="<%= photo %>" width="100" />
+        <h3><a href="#image-picker" data-rel="dialog">Add an image</a></h3>
+        <p>fpp</p>
+      </li>
+      <% end %>
+    </ul>
+    
     
     <% if @flickr_userid %>
-    <div>
-      <a href="#image-picker" data-role="button" data-rel="dialog">Choose an image</a>
+    <div style="margin-top: 1em;">
+      <a href="#image-picker" data-role="button" data-rel="dialog">Add an image</a>
     </div>
     <% end %>
     
@@ -44,7 +58,7 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr
     $.each(data.items, function(i,item) {
       array = item.link.split(/\//g);
       item_id = array.slice(-2)[0];
-      html += '<li>';
+      html += '<li id='+item_id+'>';
       html += '<img src="'+item.media.m+'" />';
       html += '<h3><a href="/boos/<%= @boo.id %>?photo='+item_id+'">'+item.title+'</a></h3>';
       html += '<p>'+item.published+'</p>';

@@ -66,32 +66,28 @@ get '/boos/:id' do |id|
   @audioboo_username = session['audioboo_username']
   
   @boo = $audioboo.boo(id)
+  @ticks = params['ticks']
+  @photos = get_photos(params)
+  @photos = [@boo.urls['image']] if @photos.nil?
+  
   @embed_url = "http://#{request.env['HTTP_HOST']}/embed/#{@boo.id}"
-  if params['photo']
-    sizes = get_flickr_photo(params['photo'])    
-    @image_url = sizes[:thumbnail]
-    @embed_url << "?photo=#{params['photo']}"
-  else
-    @image_url = @boo.urls['image']
-  end
+  
   erb :boo
 end
 
 get '/embed/:id' do |id|
   @boo = $audioboo.boo(id)
-  if params['photos']
-    @images = []
-    params['photos'].split(',').each do |photo|
-      sizes = get_flickr_photo(photo)
-      @images << sizes[:thumbnail]
-    end
-  elsif params['photo']
-    sizes = get_flickr_photo(params['photo'])    
-    @image_url = sizes[:medium]
-  else
-    @image_url = @boo.urls['image']
-  end
+  @ticks = params['ticks']
+  @photos = get_photos(params)
+  @photos = [@boo.urls['image']] if @photos.nil?
   erb :embed, :layout => false
+end
+
+def get_photos(params)
+  params['photos'].split(',').map do |photo|
+    sizes = get_flickr_photo(photo)
+    sizes[:thumbnail]
+  end if params['photos']
 end
 
 def get_flickr_photo(id)
