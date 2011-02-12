@@ -6,7 +6,7 @@
   <div data-role="content">
     <ul data-role="listview" data-inset="true">
     <% @boos.each do |boo| %>
-      <li><a href="/boos/<%= boo.id %>"><%= boo.title %></a></li>
+      <li><a rel=external href="/boos/<%= boo.id %>"><%= boo.title %></a></li>
     <% end %>
     </ul>
   </div>
