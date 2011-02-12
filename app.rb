@@ -26,6 +26,15 @@ post '/settings' do
   @audioboo_username = params[:audioboo_username]
   
   session['flickr_username'] = @flickr_username
+  if @flickr_username
+    begin
+      result = flickr.people.findByUsername(:username => @flickr_username)
+      session['flickr_userid'] = result['id'] if result
+    rescue
+      @flickr_username_error = true
+    end
+  end
+  
   if @audioboo_username
     session['audioboo_username'] = @audioboo_username
     redirect "/boos/by/user/#{@audioboo_username}"
@@ -42,7 +51,7 @@ get '/boos/by/user/:username' do |username|
 end
 
 get '/boos/:id' do |id|
-  @flickr_username = session['flickr_username']
+  @flickr_userid = session['flickr_userid']
   @audioboo_username = session['audioboo_username']
   
   @boo = $audioboo.boo(id)
@@ -71,6 +80,7 @@ get '/embed/:id' do |id|
   end
   erb :embed, :layout => false
 end
+
 
 
 OpenStruct.send(:define_method, :id) { @table[:id] }

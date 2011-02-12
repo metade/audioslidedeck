@@ -8,7 +8,7 @@
     <h2><%= @boo.title %></h2>
     <img src="<%= @image_url %>" width="100" />
     
-    <% if @flickr_username %>
+    <% if @flickr_userid %>
     <div>
       <a href="#image-picker" data-role="button" data-rel="dialog">Choose an image</a>
     </div>
@@ -35,8 +35,9 @@
   </div>
 </div>
 
+<% if @flickr_userid %>
 <script type="text/javascript">
-$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=52921130@N00&jsoncallback=?",
+$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr_userid %>&jsoncallback=?",
   { format: "json" },
   function(data) {
     var html = '';
@@ -52,3 +53,4 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=52921130@N0
     $("#image-list").append(html);
   });
 </script>
+<% end %>

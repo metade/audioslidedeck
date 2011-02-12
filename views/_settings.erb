@@ -1,9 +1,9 @@
 <form action="/settings" method="post">
   <label for="audioboo_username">AudioBoo Username</label>
-  <input type="textfield" name="audioboo_username" id="audioboo_username"><%= @audioboo_username %></input>
+  <input type="textfield" name="audioboo_username" id="audioboo_username" value="<%= @audioboo_username %>" />
   
   <label for="flickr_username">Flickr Username</label>
-  <input type="textfield" name="flickr_username" id="flickr_username"><%= @flickr_username %></input>
+  <input type="textfield" name="flickr_username" id="flickr_username" value="<%= @flickr_username %>" />
   
   <button type="submit">Submit</button>
 </form>
