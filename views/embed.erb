@@ -1,11 +1,10 @@
-<% if @images %>
-<ul>
+<div id="slider">
   <% @images.each do |image| %>
-    <li><img src="<%= image %>" /></li>
-  <% end %>
-</ul>
-<% else %>
-<p><img src="<%= @image_url %>" /></p>
-<% end %>
+    <img src="<%= image %>" />
+  <% end %>  
+</div>
+<script type="text/javascript">
+  var ticks = [<%= params['ticks'] %>];
+</script>
 <p><%= @boo.urls['high_mp3'] %></p>
 <h1><%= @boo.title %><h1>
