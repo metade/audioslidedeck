@@ -10,9 +10,10 @@
     <div>
       <a href="#image-picker" data-role="button" data-rel="dialog">Choose an image</a>
     </div>
-  
+    
+    
     <h3>Post</h3>
-    <a href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="222" width="300"></iframe>]) %>">Post to Posterous</a>
+    <a href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="222" width="300"></iframe>]) %>" data-role="button">Post to Posterous</a>
     
     <h3>Embed Code</h3>
     <code>
