@@ -68,10 +68,8 @@ get '/boos/:id' do |id|
   @boo = $audioboo.boo(id)
   @embed_url = "http://#{request.env['HTTP_HOST']}/embed/#{@boo.id}"
   if params['photo']
-    sizes = flickr.photos.getSizes(:photo_id => params['photo'])
-    pp sizes
-    thumbnail = sizes.find { |s| s.label == 'Thumbnail' }
-    @image_url = thumbnail['source']
+    sizes = get_flickr_photo(params['photo'])    
+    @image_url = sizes[:thumbnail]
     @embed_url << "?photo=#{params['photo']}"
   else
     @image_url = @boo.urls['image']
@@ -81,18 +79,15 @@ end
 
 get '/embed/:id' do |id|
   @boo = $audioboo.boo(id)
-  
   if params['photos']
     @images = []
     params['photos'].split(',').each do |photo|
       sizes = get_flickr_photo(photo)
-      p sizes
       @images << sizes[:thumbnail]
     end
   elsif params['photo']
-    sizes = get_flickr_photo(params['photo'])
-    thumbnail = sizes.find {|s| s.label == 'Medium' }
-    @image_url = thumbnail['source']
+    sizes = get_flickr_photo(params['photo'])    
+    @image_url = sizes[:medium]
   else
     @image_url = @boo.urls['image']
   end
