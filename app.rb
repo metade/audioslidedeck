@@ -6,9 +6,20 @@ require 'pp'
 require 'ostruct'
 require 'open-uri'
 require 'flickraw'
+require 'digest/md5'
 
-set :sessions, true
-FlickRaw.api_key = ENV['flickr_api_key']
+require 'active_support/cache'
+require 'active_support/cache/dalli_store'
+
+configure do
+  set :sessions, true
+  FlickRaw.api_key = ENV['flickr_api_key']
+  if ENV['cache'] == 'dalli'
+    CACHE = ActiveSupport::Cache::DalliStore.new
+  else
+    CACHE = ActiveSupport::Cache::MemoryStore.new
+  end
+end
 
 get '/' do
   response.headers['Cache-Control'] = 'public, max-age=300'
@@ -59,7 +70,7 @@ get '/boos/:id' do |id|
   if params['photo']
     sizes = flickr.photos.getSizes(:photo_id => params['photo'])
     pp sizes
-    thumbnail = sizes.find {|s| s.label == 'Thumbnail' }
+    thumbnail = sizes.find { |s| s.label == 'Thumbnail' }
     @image_url = thumbnail['source']
     @embed_url << "?photo=#{params['photo']}"
   else
@@ -70,9 +81,16 @@ end
 
 get '/embed/:id' do |id|
   @boo = $audioboo.boo(id)
-  if params['photo']
-    sizes = flickr.photos.getSizes(:photo_id => params['photo'])
-    pp sizes
+  
+  if params['photos']
+    @images = []
+    params['photos'].split(',').each do |photo|
+      sizes = get_flickr_photo(photo)
+      p sizes
+      @images << sizes[:thumbnail]
+    end
+  elsif params['photo']
+    sizes = get_flickr_photo(params['photo'])
     thumbnail = sizes.find {|s| s.label == 'Medium' }
     @image_url = thumbnail['source']
   else
@@ -81,7 +99,21 @@ get '/embed/:id' do |id|
   erb :embed, :layout => false
 end
 
-
+def get_flickr_photo(id)
+  key = Digest::MD5.hexdigest(id)
+  CACHE.fetch(key, :expires_in => 1.hour) do
+    begin
+      result = {}
+      flickr.photos.getSizes(:photo_id => id).each do |size|
+        result[size['label'].downcase.to_sym] = size['source']
+      end
+      result
+    rescue => e
+      puts e
+      nil
+    end
+  end
+end
 
 OpenStruct.send(:define_method, :id) { @table[:id] }
 class AudioBoo

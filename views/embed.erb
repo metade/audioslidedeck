@@ -1,3 +1,11 @@
+<% if @images %>
+<ul>
+  <% @images.each do |image| %>
+    <li><img src="<%= image %>" /></li>
+  <% end %>
+</ul>
+<% else %>
 <p><img src="<%= @image_url %>" /></p>
+<% end %>
 <p><%= @boo.urls['high_mp3'] %></p>
 <h1><%= @boo.title %><h1>

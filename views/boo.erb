@@ -45,7 +45,7 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr
       array = item.link.split(/\//g);
       item_id = array.slice(-2)[0];
       html += '<li>';
-      html += '<img src="'+item.media.m+'"/>';
+      html += '<img src="'+item.media.m+'" />';
       html += '<h3><a href="/boos/<%= @boo.id %>?photo='+item_id+'">'+item.title+'</a></h3>';
       html += '<p>'+item.published+'</p>';
       html += '</li>';
