@@ -7,15 +7,44 @@ require 'ostruct'
 require 'open-uri'
 require 'flickraw'
 
+set :sessions, true
 FlickRaw.api_key = ENV['flickr_api_key']
 
+get '/' do
+  response.headers['Cache-Control'] = 'public, max-age=300'
+  erb :index
+end
+
+get '/settings' do
+  @flickr_username = session['flickr_username']
+  @audioboo_username = session['audioboo_username']
+  erb :settings
+end
+
+post '/settings' do
+  @flickr_username = params[:flickr_username]
+  @audioboo_username = params[:audioboo_username]
+  
+  session['flickr_username'] = @flickr_username
+  if @audioboo_username
+    session['audioboo_username'] = @audioboo_username
+    redirect "/boos/by/user/#{@audioboo_username}"
+  else
+    erb :settings
+  end
+end
+
 get '/boos/by/user/:username' do |username|
+  response.headers['Cache-Control'] = 'public, max-age=300'
   @user = $audioboo.user(username)
   @boos = $audioboo.user_boos(@user)
   erb :user
 end
 
 get '/boos/:id' do |id|
+  @flickr_username = session['flickr_username']
+  @audioboo_username = session['audioboo_username']
+  
   @boo = $audioboo.boo(id)
   @embed_url = "http://#{request.env['HTTP_HOST']}/embed/#{@boo.id}"
   if params['photo']

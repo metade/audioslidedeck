@@ -1,16 +1,18 @@
 <div data-role="page"> 
   <div data-role="header">
     <h1>Embed an AudioBoo</h1>
+    <a href="/settings" data-icon="gear" class="ui-btn-right">Settings</a>
   </div>
 
   <div data-role="content">
     <h2><%= @boo.title %></h2>
     <img src="<%= @image_url %>" width="100" />
-  
+    
+    <% if @flickr_username %>
     <div>
       <a href="#image-picker" data-role="button" data-rel="dialog">Choose an image</a>
     </div>
-    
+    <% end %>
     
     <h3>Post</h3>
     <a href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="222" width="300"></iframe>]) %>" data-role="button">Post to Posterous</a>
