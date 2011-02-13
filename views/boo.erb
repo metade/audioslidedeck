@@ -53,7 +53,7 @@
     <h1>Embed and share</h1>
   </div>
   <div data-role="content">
-    <a href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="222" width="300"></iframe>]) %>" data-role="button">Post to Posterous</a>
+    <a id="posterous" href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="222" width="300"></iframe>]) %>" data-role="button">Post to Posterous</a>
   
     <h3>Embed Code</h3>
     <code id="code">
@@ -66,19 +66,29 @@
 $(".remove-photo").live("click", function() {
   $(this).parent().remove();
 });
-
-
-
+$('#embed').live('pageshow',function(event, ui){
+  var embedHtml = embedCode();
+  $('#embed #code').text(embedHtml);
+  var mailTo = "mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body="+embedHtml.replace("&", ";");
+  console.log(encodeURI(mailTo));
+  $('#embed #posterous').attr('href', encodeURI(mailTo));
+});
 
 function embedCode() {
-  console.log('fooo');
-  photos = $("#photos li");
-  photo_ids = '';
-  for (i=0; i<=photos.size; i++) {
-    photo_ids += photos[i].id + ','
-  }
-  console.log(photo_ids);
+  photos = $("#photos li input[type='hidden']");
+  photo_ids = jQuery.map(photos, function(photo, i){
+    return (photo.value);
+  });
+  tick_elements = $("#photos li input[type='number']");
+  ticks = jQuery.map(tick_elements, function(tick, i){
+    return (tick.value);
+  });
   
+  params = '?photos=' + photo_ids.join(",") + '&ticks=' + ticks.join(",");
+  url = "<%= @embed_url %>"+params;
+  
+  code = '<iframe marginheight="0" scrolling="no" marginwidth="0" src="'+url+'" height="222" width="300"></iframe>';
+  return code;
 }
 
 $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr_userid %>&jsoncallback=?",
@@ -97,15 +107,15 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr
     $("#image-list").append(html);
     $("#image-list li h3 a").live("click", function() {
       var photo_id = $(this).attr('id');
-      console.log(photo_id);
       var image = $("#img-"+photo_id)[0].src;
+      var tick = $("#slider").val();
       
       var html = '';
       html += '<li style="height: 60px;">';
       html += '<input type="hidden" class="id" value="'+photo_id+'" />';
       html += '<img src="'+image+'" width="100" class="ui-li-thumb" />';
       html += '<a href="#image-picker" data-rel="dialog"></a>';
-      html += '<a href="#" class="ui-li-count ui-link"><input type="number" min="0" max="<%= @boo.duration %>" step="1" class="tick" value="0" /></a>';
+      html += '<a href="#" class="ui-li-count ui-link"><input type="number" min="0" max="<%= @boo.duration %>" step="1" class="tick" value="'+tick+'" /></a>';
       html += '<a href="#" class="remove-photo ui-link" data-rel="dialog" data-transition="slideup">Remove photo</a>';
       html += '</li>';
       
