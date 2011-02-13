@@ -69,9 +69,8 @@ $(".remove-photo").live("click", function() {
 $('#embed').live('pageshow',function(event, ui){
   var embedHtml = embedCode();
   $('#embed #code').text(embedHtml);
-  var mailTo = "mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body="+embedHtml.replace("&", ";");
-  console.log(encodeURI(mailTo));
-  $('#embed #posterous').attr('href', encodeURI(mailTo));
+  var mailTo = "mailto:post@posterous.com?subject=<%= @boo.title %>&body="+embedHtml.replace("&", ";");
+  $('#embed #posterous').attr('href', mailTo);
 });
 
 function embedCode() {
