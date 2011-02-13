@@ -53,11 +53,11 @@
     <h1>Embed and share</h1>
   </div>
   <div data-role="content">
-    <a id="posterous" href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="222" width="300"></iframe>]) %>" data-role="button">Post to Posterous</a>
+    <a id="posterous" href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="500" width="500"></iframe>]) %>" data-role="button">Post to Posterous</a>
   
     <h3>Embed Code</h3>
     <code id="code">
-      &lt;iframe marginheight=&quot;0&quot; scrolling=&quot;no&quot; marginwidth=&quot;0&quot; src=&quot;<%= @embed_url %>&quot; height=&quot;222&quot; width=&quot;300&quot;&gt;&lt;/iframe&gt;
+      &lt;iframe marginheight=&quot;0&quot; scrolling=&quot;no&quot; marginwidth=&quot;0&quot; src=&quot;<%= @embed_url %>&quot; height=&quot;500&quot; width=&quot;500&quot;&gt;&lt;/iframe&gt;
     </code>
   </div>
 </div>
@@ -87,7 +87,7 @@ function embedCode() {
   params = '?photos=' + photo_ids.join(",") + '&ticks=' + ticks.join(",");
   url = "<%= @embed_url %>"+params;
   
-  code = '<iframe marginheight="0" scrolling="no" marginwidth="0" src="'+url+'" height="222" width="300"></iframe>';
+  code = '<iframe marginheight="0" scrolling="no" marginwidth="0" src="'+url+'" height="500" width="500"></iframe>';
   return code;
 }
 
