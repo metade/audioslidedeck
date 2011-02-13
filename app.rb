@@ -80,23 +80,23 @@ end
 
 get '/embed/:id' do |id|
   @boo = $audioboo.boo(id)
-  @ticks = params['ticks']
-  @photos = get_photos(params)
-  @photos = [@boo.urls['image']] if @photos.nil?
+  @photos = get_photos(@boo, params['photos'])
+  @ticks = params['ticks'] ? params['ticks'].split(',') : Array.new(@photos.size, 0)
   erb :embed, :layout => false
 end
 
 def get_photos(boo, photos)
+  booimage = { :id => 'booimage', :thumbnail => @boo.urls['image'], :medium => @boo.urls['image'] }
   if photos
     photos.split(',').map do |photo|
       if (photo=='booimage')
-        { :id => 'booimage', :thumbnail => @boo.urls['image'] }
+        booimage
       else
         get_flickr_photo(photo)
       end
     end
   else
-    [{ :id => 'booimage', :thumbnail => @boo.urls['image'] }]
+    [booimage]
   end
 end
 
