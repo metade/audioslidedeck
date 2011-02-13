@@ -81,8 +81,9 @@ function embedCode() {
   });
   tick_elements = $("#photos li input[type='number']");
   ticks = jQuery.map(tick_elements, function(tick, i){
-    return (tick.value);
+    return (tick.value * 1000);
   });
+  ticks.shift;
   
   params = '?photos=' + photo_ids.join(",") + '&ticks=' + ticks.join(",");
   url = "<%= @embed_url %>"+params;

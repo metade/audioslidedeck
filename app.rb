@@ -67,8 +67,8 @@ end
 
 get '/boos/search' do 
   response.headers['Cache-Control'] = 'public, max-age=300'
-  if params['username']
-    @user = $audioboo.user(username)
+  if params['user']
+    @user = $audioboo.user(params['user'])
     @boos = $audioboo.user_boos(@user)
     @title = "#{@user.name}'s Boos"
   elsif params['tag']
@@ -95,7 +95,7 @@ end
 get '/embed/:id' do |id|
   @boo = $audioboo.boo(id)
   @photos = get_photos(@boo, params['photos'])
-  @ticks = params['ticks'] ? params['ticks'].split(',') : Array.new(@photos.size, 0)
+  @ticks = params['ticks'] ? params['ticks'].strip.split(',') : Array.new(@photos.size, 0)
   erb :embed, :layout => false
 end
 
