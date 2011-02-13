@@ -101,8 +101,8 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr
       item_id = array.slice(-2)[0];
       html += '<li>';
       html += '<img id="img-'+item_id+'" src="'+item.media.m+'" />';
-      html += '<h3 style="margin-left: 90px"><a id="'+item_id+'" href="#">'+item.title+'</a></h3>';
-      html += '<p style="margin-left: 90px">'+item.published+'</p>';
+      html += '<h3><a id="'+item_id+'" href="#">'+item.title+'</a></h3>';
+      html += '<p>'+item.published+'</p>';
       html += '</li>';
     });
     $("#image-list").append(html);
@@ -110,6 +110,7 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr
       var photo_id = $(this).attr('id');
       var image = $("#img-"+photo_id)[0].src;
       var tick = $("#slider").val();
+      if (tick==0) tick = 5;
       
       var html = '';
       html += '<li style="height: 60px;">';
