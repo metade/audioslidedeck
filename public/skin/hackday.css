@@ -1,0 +1,92 @@
+body {
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+body.demos {
+}
+#container {    
+}
+#content_main {    
+}
+.slider-wrapper {    
+}
+#htmlcaption {
+}
+#jquery_jplayer {
+}
+.jp-playlist-player {
+}
+
+body {
+    text-align: center;
+}
+
+#container {
+    margin: 0 auto;
+}
+
+.jp-playlist-player {
+    width: 410px;
+    text-align: center;
+}
+
+div.jp-interface {
+    margin: 1em auto;
+}
+
+/* rounded corners */
+div.jp-interface {   
+    -moz-border-radius: 15px; 
+    border-radius: 15px;
+    text-align: left;
+}
+
+.player-outer-wrapper {
+    background-color: #F8F8F8;
+    margin: 1em auto;
+    width: 664px;
+    -moz-border-radius: 15px; 
+    border-radius: 15px;
+    border: 15px solid #F0F0F0;
+}
+
+.player-inner-wrapper {
+    padding: 10px;
+    clear: both;
+}
+
+/*
+.audio-slider {
+    margin: 0 0;
+    width: 664px;
+}
+*/
+
+#slider {
+    margin: 0;
+    -moz-border-radius: 10px; 
+    border-radius: 10px;
+    border: 3px solid #F0F0F0;
+}
+
+.slider-wrapper {
+    margin: 10px auto;
+    width: 624px;
+}
+
+div.nivo-controlNav {
+    display: none; 
+}
+
+.jp-playlist-player {
+	margin: 0 auto;
+}
+
+#jplayer_playlist {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: -100px;
+    left: -100px;
+}
