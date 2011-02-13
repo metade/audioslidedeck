@@ -30,7 +30,7 @@
           <a href="#image-picker" data-rel="dialog"></a>
         </h3>
         <a href="#">
-          <input type="text" class="tick" value="<%= @ticks[i] %>" />
+          <input type="number" min="0" max="<%= @boo.duration %>" step="1" class="tick" value="<%= @ticks[i] %>" />
         </a>
         <a href="#" class="remove-photo" data-rel="dialog" data-transition="slideup">Remove photo</a>
       </li>
