@@ -67,8 +67,7 @@ get '/boos/:id' do |id|
   
   @boo = $audioboo.boo(id)
   @ticks = params['ticks']
-  @photos = get_photos(params)
-  @photos = [@boo.urls['image']] if @photos.nil?
+  @photos = get_photos(@boo, params['photos'])
   
   @embed_url = "http://#{request.env['HTTP_HOST']}/embed/#{@boo.id}"
   
@@ -83,18 +82,25 @@ get '/embed/:id' do |id|
   erb :embed, :layout => false
 end
 
-def get_photos(params)
-  params['photos'].split(',').map do |photo|
-    sizes = get_flickr_photo(photo)
-    sizes[:thumbnail]
-  end if params['photos']
+def get_photos(boo, photos)
+  if photos
+    photos.split(',').map do |photo|
+      if (photo=='booimage')
+        { :id => 'booimage', :thumbnail => @boo.urls['image'] }
+      else
+        get_flickr_photo(photo)
+      end
+    end
+  else
+    [{ :id => 'booimage', :thumbnail => @boo.urls['image'] }]
+  end
 end
 
 def get_flickr_photo(id)
   key = Digest::MD5.hexdigest(id)
   CACHE.fetch(key, :expires_in => 1.hour) do
     begin
-      result = {}
+      result = { :id => id }
       flickr.photos.getSizes(:photo_id => id).each do |size|
         result[size['label'].downcase.to_sym] = size['source']
       end

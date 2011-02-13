@@ -7,32 +7,38 @@
   <div data-role="content">
     <h2><%= @boo.title %></h2>
     
-    <audio id="player" preload="auto" controls="true">
+    <audio id="player">
       <source src="<%= @boo.urls['high_mp3'] %>" />
     </audio>
-    
-    <ul data-role="listview" id="photos">
-      <% @photos.each_with_index do |photo,i| %>
-      <li>
-        <img src="<%= photo %>" width="100" />
-        <h3><a href="#image-picker" data-rel="dialog">Add an image</a></h3>
-        <p>fpp</p>
-      </li>
-      <% end %>
-    </ul>
-    
+    <div data-role="fieldcontain">
+      <input type="range" name="slider" id="slider" value="0" min="0" max="<%= @boo.duration %>" />
+    </div>
     
     <% if @flickr_userid %>
-    <div style="margin-top: 1em;">
+    <div style="margin-top: 1em; margin-bottom: 1em;">
       <a href="#image-picker" data-role="button" data-rel="dialog">Add an image</a>
     </div>
     <% end %>
+    
+    <div>
+    <ul data-role="listview" id="photos" data-split-icon="delete">
+      <% @photos.each_with_index do |photo,i| %>
+      <li>
+        <input type="hidden" class="id" value="photo[:id]" />
+        <img src="<%= photo[:thumbnail] %>" width="100" />
+        <h3><a href="#image-picker" data-rel="dialog">Add an image</a></h3>
+        <p>fpp</p>
+        <a href="javascript:false;" class="remove-photo" data-rel="dialog" data-transition="slideup">Remove photo</a>
+      </li>
+      <% end %>
+    </ul>
+    </div>
     
     <h3>Post</h3>
     <a href="mailto:post@posterous.com?subject=<%= URI.escape(@boo.title) %>&body=<%= URI.escape(%[<iframe marginheight="0" scrolling="no" marginwidth="0" src="#{@embed_url}" height="222" width="300"></iframe>]) %>" data-role="button">Post to Posterous</a>
     
     <h3>Embed Code</h3>
-    <code>
+    <code id="code">
       &lt;iframe marginheight=&quot;0&quot; scrolling=&quot;no&quot; marginwidth=&quot;0&quot; src=&quot;<%= @embed_url %>&quot; height=&quot;222&quot; width=&quot;300&quot;&gt;&lt;/iframe&gt;
     </code>
   </div>
@@ -51,6 +57,32 @@
 
 <% if @flickr_userid %>
 <script type="text/javascript">
+$(".remove-photo").live("click", function() {
+  $(this).parent().remove();
+});
+function embedCode() {
+  console.log('fooo');
+  photos = $("#photos li");
+  photo_ids = '';
+  for (i=0; i<=photos.size; i++) {
+    photo_ids += photos[i].id + ','
+  }
+  console.log(photo_ids);
+  
+}
+function selectPhoto(item_id) {
+  img = $("#image-picker #"+item_id+" img");
+  var html = '';
+  html += '<li id='+item_id+'>';
+  html += '<img src="'+img.src+'" />';
+  html += '<h3 style="margin-left: 90px"><a href="javascript:selectPhoto('+item_id+')">foo</a></h3>';
+  html += '<p style="margin-left: 90px">bar</p>';
+  html += '</li>';
+  $("#photos").append(html);
+  $('#photos').listview('refresh');
+  $("#image-picker").dialog('close');
+  console.log(embedCode());
+}
 $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr_userid %>&jsoncallback=?",
   { format: "json" },
   function(data) {
@@ -60,8 +92,8 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr
       item_id = array.slice(-2)[0];
       html += '<li id='+item_id+'>';
       html += '<img src="'+item.media.m+'" />';
-      html += '<h3><a href="/boos/<%= @boo.id %>?photo='+item_id+'">'+item.title+'</a></h3>';
-      html += '<p>'+item.published+'</p>';
+      html += '<h3 style="margin-left: 90px"><a href="javascript:selectPhoto('+item_id+')">'+item.title+'</a></h3>';
+      html += '<p style="margin-left: 90px">'+item.published+'</p>';
       html += '</li>';
     });
     $("#image-list").append(html);
