@@ -22,10 +22,8 @@
       <li>
         <input type="hidden" class="id" value="<%= photo[:id] %>" />
         <img src="<%= photo[:thumbnail] %>" width="100" />
-        <h3>
-          <a href="#image-picker" data-rel="dialog"></a>
-        </h3>
-        <a href="#">
+        <a href="#image-picker" data-rel="dialog"></a>
+        <a href="#" class="ui-li-count">
           <input type="number" min="0" max="<%= @boo.duration %>" step="1" class="tick" value="<%= @ticks[i] %>" />
         </a>
         <a href="#" class="remove-photo" data-rel="dialog" data-transition="slideup">Remove photo</a>
@@ -82,19 +80,7 @@ function embedCode() {
   console.log(photo_ids);
   
 }
-function selectPhoto(item_id) {
-  img = $("#image-picker #"+item_id+" img");
-  var html = '';
-  html += '<li id='+item_id+'>';
-  html += '<img src="'+img.src+'" />';
-  html += '<h3 style="margin-left: 90px"><a href="javascript:selectPhoto('+item_id+')">foo</a></h3>';
-  html += '<p style="margin-left: 90px">bar</p>';
-  html += '</li>';
-  $("#photos").append(html);
-  $('#photos').listview('refresh');
-  $("#image-picker").dialog('close');
-  console.log(embedCode());
-}
+
 $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr_userid %>&jsoncallback=?",
   { format: "json" },
   function(data) {
@@ -115,12 +101,12 @@ $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?id=<%= @flickr
       var image = $("#img-"+photo_id)[0].src;
       
       var html = '';
-      html += '<li>';
+      html += '<li style="height: 60px;">';
       html += '<input type="hidden" class="id" value="'+photo_id+'" />';
       html += '<img src="'+image+'" width="100" class="ui-li-thumb" />';
-      html += '<h3><a href="#image-picker" data-rel="dialog"></a></h3>';
-      html += '<a href="#" class="ui-link"><input type="number" min="0" max="<%= @boo.duration %>" step="1" class="tick ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" value="0" /></a>';
-      html += '<a href="#" class="remove-photo" data-rel="dialog" data-transition="slideup">Remove photo</a>';
+      html += '<a href="#image-picker" data-rel="dialog"></a>';
+      html += '<a href="#" class="ui-li-count ui-link"><input type="number" min="0" max="<%= @boo.duration %>" step="1" class="tick" value="0" /></a>';
+      html += '<a href="#" class="remove-photo ui-link" data-rel="dialog" data-transition="slideup">Remove photo</a>';
       html += '</li>';
       
       $("#photos").append(html);

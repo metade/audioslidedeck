@@ -40,7 +40,11 @@ post '/settings' do
   if @flickr_username
     begin
       result = flickr.people.findByUsername(:username => @flickr_username)
-      session['flickr_userid'] = result['id'] if result
+      if result
+        session['flickr_userid'] = result['id'] 
+      else
+        session['flickr_username'] = nil
+      end
     rescue
       @flickr_username_error = true
     end
