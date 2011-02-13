@@ -34,7 +34,7 @@ $(document).ready(function(){
 
   var playItem = 0;
   
-    var myPlayList = [{"name":"<%= @boo.title %>","mp3":"<%= @boo.urls['high_mp3'].gsub('/', '\/') %>"}];
+    var myPlayList = [{"name":"<%= @boo.title.gsub('"' '\"') %>","mp3":"<%= @boo.urls['high_mp3'].gsub('/', '\/') %>"}];
     var picsTime = [<%= @ticks.join(',') %>];
   // Local copy of jQuery selectors, for performance.
   var jpPlayTime = $("#jplayer_play_time");
@@ -153,7 +153,7 @@ $("#nivo-nextNav").focus();
 
 <div id="slider">
   <% @photos.each do |photo| %>
-    <img src="<%= photo[:medium] %>" />
+    <img src="<%= photo[:medium] %> width="500" />
   <% end %>
 </div>
 <div id="htmlcaption" class="nivo-html-caption">
