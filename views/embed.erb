@@ -34,7 +34,7 @@ $(document).ready(function(){
 
   var playItem = 0;
   
-    var myPlayList = [{"name":"<%= @boo.title %>","mp3":"<%= @boo.urls['high_mp3'] %>"}];
+    var myPlayList = [{"name":"<%= @boo.title %>","mp3":"<%= @boo.urls['high_mp3'].gsub('/', '\/') %>"}];
     var picsTime = [<%= @ticks.join(',') %>];
   // Local copy of jQuery selectors, for performance.
   var jpPlayTime = $("#jplayer_play_time");
