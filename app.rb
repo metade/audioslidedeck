@@ -66,8 +66,8 @@ get '/boos/:id' do |id|
   @audioboo_username = session['audioboo_username']
   
   @boo = $audioboo.boo(id)
-  @ticks = params['ticks']
   @photos = get_photos(@boo, params['photos'])
+  @ticks = params['ticks'] ? params.split(',') : Array.new(@photos.size, 0)
   
   @embed_url = "http://#{request.env['HTTP_HOST']}/embed/#{@boo.id}"
   
