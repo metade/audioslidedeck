@@ -65,6 +65,20 @@ get '/boos/by/user/:username' do |username|
   erb :user
 end
 
+get '/boos/search' do 
+  response.headers['Cache-Control'] = 'public, max-age=300'
+  if params['username']
+    @user = $audioboo.user(username)
+    @boos = $audioboo.user_boos(@user)
+    @title = "#{@user.name}'s Boos"
+  elsif params['tag']
+    @tag = params['tag']
+    @boos = $audioboo.tag_boos(@tag)
+    @title = "Boos tagged '#{@tag}'"
+  end
+  erb :search
+end
+
 get '/boos/:id' do |id|
   @flickr_userid = session['flickr_userid']
   @audioboo_username = session['audioboo_username']
@@ -86,7 +100,12 @@ get '/embed/:id' do |id|
 end
 
 def get_photos(boo, photos)
-  booimage = { :id => 'booimage', :thumbnail => @boo.urls['image'], :medium => @boo.urls['image'] }
+  booimage = { 
+    :id => 'booimage', 
+    :thumbnail => @boo.urls['image'], 
+    :medium => @boo.urls['image'],
+    :square => @boo.urls['image'],
+  } if @boo.urls['image']
   if photos
     photos.split(',').map do |photo|
       if (photo=='booimage')
@@ -94,9 +113,9 @@ def get_photos(boo, photos)
       else
         get_flickr_photo(photo)
       end
-    end
+    end.compact
   else
-    [booimage]
+    [booimage].compact
   end
 end
 
@@ -134,6 +153,11 @@ class AudioBoo
   
   def user_boos(user)
     data = get("/users/#{user.id}/audio_clips.json")
+    data['audio_clips'].map { |c| OpenStruct.new(c) }
+  end
+  
+  def tag_boos(tag)
+    data = get("/tag/#{tag}/audio_clips.json")
     data['audio_clips'].map { |c| OpenStruct.new(c) }
   end
   

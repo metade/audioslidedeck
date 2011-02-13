@@ -5,6 +5,17 @@
   
   <div data-role="content">
     <p>Create and share audio slideshows with AudioBoo and Flickr</p>
-    <%= erb :_settings, :layout => false %>
+    
+    <form action="/boos/search" method="get">
+      <label for="username">AudioBoo Username</label>
+      <input type="textfield" name="username" id="username"/>
+      <button type="submit">Go</button>
+    </form>
+    
+    <form action="/boos/search" method="get">
+      <label for="query">Search by tag</label>
+      <input type="textfield" name="tag" id="tag" />
+      <button type="submit">Search</button>
+    </form>
   </div>
 </div>
