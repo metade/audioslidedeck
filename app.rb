@@ -93,6 +93,7 @@ get '/boos/:id' do |id|
 end
 
 get '/embed/:id' do |id|
+  response.headers['Cache-Control'] = 'public, max-age=300'
   @boo = $audioboo.boo(id)
   @photos = get_photos(@boo, params['photos'])
   @ticks = params['ticks'] ? params['ticks'].strip.split(',') : Array.new(@photos.size, 0)
